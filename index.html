@@ -16,11 +16,8 @@
             border-radius: 10px;
             width: 300px;
             margin-bottom: 20px;
-        }
-        .employee-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+            margin-right: 10px;
+            margin-left: 10px;
         }
         .employee-card h2 {
             margin-top: 10px;
@@ -38,46 +35,31 @@
     </div>
 
     <script>
-        // Link to your Google Sheets JSON API
-        const sheetURL = "https://spreadsheets.google.com/feeds/list/2PACX-1vSdtAMfgh_nNiwfp4sr3NqPoTKpxOTUIy426c3bRCezR3rZVB1RPZH7NKwn1F7wJBJuyf6r_0RV8ttk/od6/public/values?alt=json";
+        // Link to your Google Apps Script JSON API
+        const sheetURL = "https://script.google.com/macros/s/AKfycbyYyw37L6-mtTyrMnSfGurpIiSlG6wFfRI14LZPsqWkMaSRNWvE0RF60NPRg5l4CXIO/exec";
 
         async function fetchEmployeeData() {
             try {
                 const response = await fetch(sheetURL);
                 const data = await response.json();
 
-                // Extract rows from the JSON feed
-                const rows = data.feed.entry;
                 const container = document.getElementById("employee-info");
                 container.innerHTML = ""; // Clear the loading message
 
-                rows.forEach(row => {
-                    const employee = {
-                        id: row.gsx$employeeid.$t,
-                        name: row.gsx$name.$t,
-                        designation: row.gsx$designation.$t,
-                        department: row.gsx$department.$t,
-                        email: row.gsx$emailaddress.$t,
-                        phone: row.gsx$phonenumber.$t,
-                        doj: row.gsx$dateofjoining.$t,
-                        location: row.gsx$officelocation.$t,
-                        manager: row.gsx$managersname.$t,
-                        photo: row.gsx$profilepictureurl.$t
-                    };
-
+                data.forEach(employee => {
                     // Create employee card
                     const card = document.createElement("div");
                     card.className = "employee-card";
                     card.innerHTML = `
-                        <img src="${employee.photo}" alt="${employee.name}'s Photo">
-                        <h2>${employee.name}</h2>
-                        <p><strong>Designation:</strong> ${employee.designation}</p>
-                        <p><strong>Department:</strong> ${employee.department}</p>
-                        <p><strong>Email:</strong> ${employee.email}</p>
-                        <p><strong>Phone:</strong> ${employee.phone}</p>
-                        <p><strong>Date of Joining:</strong> ${employee.doj}</p>
-                        <p><strong>Office Location:</strong> ${employee.location}</p>
-                        <p><strong>Manager:</strong> ${employee.manager}</p>
+                        <h2>${employee["Name"]}</h2>
+                        <p><strong>Designation:</strong> ${employee["Designation"]}</p>
+                        <p><strong>Department:</strong> ${employee["Department"]}</p>
+                        <p><strong>Email:</strong> ${employee["Email Address"]}</p>
+                        <p><strong>Phone:</strong> ${employee["Phone Number"]}</p>
+                        <p><strong>Date of Joining:</strong> ${employee["Date of Joining"]}</p>
+                        <p><strong>Office Location:</strong> ${employee["Office Location"]}</p>
+                        <p><strong>Manager:</strong> ${employee["Manager's Name"]}</p>
+                        <p><strong>Access Level:</strong> ${employee["Access Level"]}</p>
                     `;
                     container.appendChild(card);
                 });
