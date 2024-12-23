@@ -39,24 +39,34 @@
 
     <script>
         async function fetchEmployeeData() {
+            // Get the employee ID from the URL parameter
             const urlParams = new URLSearchParams(window.location.search);
-            const employeeID = urlParams.get("id"); // Get 'id' from URL
+            const employeeID = urlParams.get("id");
             const apiURL = employeeID
                 ? `https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev?id=${employeeID}`
                 : `https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev`;
 
             try {
+                console.log("Fetching data from API:", apiURL); // Log the API URL
                 const response = await fetch(apiURL);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
                 const data = await response.json();
+                console.log("Fetched Data:", data); // Log the fetched data
 
                 const container = document.getElementById("employee-info");
                 container.innerHTML = ""; // Clear the loading message
 
+                // Handle no data or empty responses
                 if (data.length === 0) {
                     container.innerHTML = "<p>No employee found for this ID.</p>";
                     return;
                 }
 
+                // Render employee data dynamically
                 data.forEach(employee => {
                     const card = document.createElement("div");
                     card.className = "employee-card";
@@ -73,11 +83,12 @@
                     container.appendChild(card);
                 });
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching data:", error); // Log errors
                 document.getElementById("employee-info").innerText = "Failed to load data.";
             }
         }
 
+        // Fetch data when the page loads
         fetchEmployeeData();
     </script>
 </body>
