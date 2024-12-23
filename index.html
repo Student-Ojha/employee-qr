@@ -39,9 +39,8 @@
 
     <script>
         async function fetchEmployeeData() {
-            // Get the employee ID from the URL parameter
             const urlParams = new URLSearchParams(window.location.search);
-            const employeeID = urlParams.get("id");
+            const employeeID = urlParams.get("id"); // Get 'id' from URL
             const apiURL = employeeID
                 ? `https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev?id=${employeeID}`
                 : `https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev`;
