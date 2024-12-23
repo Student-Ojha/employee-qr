@@ -7,6 +7,8 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             text-align: center;
+            background-color: #000;
+            color: #fff;
         }
         .employee-card {
             display: inline-block;
@@ -18,6 +20,7 @@
             margin-bottom: 20px;
             margin-right: 10px;
             margin-left: 10px;
+            background-color: #222;
         }
         .employee-card h2 {
             margin-top: 10px;
@@ -35,19 +38,26 @@
     </div>
 
     <script>
-        // Link to your Google Apps Script JSON API
-const sheetURL = "https://script.google.com/macros/s/AKfycbyYyw37L6-mtTyrMnSfGurpIiSlG6wFfRI14LZPsqWkMaSRNWvE0RF60NPRg5l4CXIO/exec";
-
         async function fetchEmployeeData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const employeeID = urlParams.get("id"); // Get 'id' from URL
+            const apiURL = employeeID
+                ? `https://script.google.com/macros/s/AKfycbyYyw37L6-mtTyrMnSfGurpIiSlG6wFfRI14LZPsqWkMaSRNWvE0RF60NPRg5l4CXIO/exec?id=${employeeID}`
+                : "https://script.google.com/macros/s/AKfycbyYyw37L6-mtTyrMnSfGurpIiSlG6wFfRI14LZPsqWkMaSRNWvE0RF60NPRg5l4CXIO/exec";
+
             try {
-                const response = await fetch(sheetURL);
+                const response = await fetch(apiURL);
                 const data = await response.json();
 
                 const container = document.getElementById("employee-info");
                 container.innerHTML = ""; // Clear the loading message
 
+                if (data.length === 0) {
+                    container.innerHTML = "<p>No employee found for this ID.</p>";
+                    return;
+                }
+
                 data.forEach(employee => {
-                    // Create employee card
                     const card = document.createElement("div");
                     card.className = "employee-card";
                     card.innerHTML = `
@@ -69,7 +79,6 @@ const sheetURL = "https://script.google.com/macros/s/AKfycbyYyw37L6-mtTyrMnSfGur
             }
         }
 
-        // Call the function to load data
         fetchEmployeeData();
     </script>
 </body>
