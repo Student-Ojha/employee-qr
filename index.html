@@ -42,8 +42,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             const employeeID = urlParams.get("id"); // Get 'id' from URL
             const apiURL = employeeID
-                ? `https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev?id=${employeeID}`
-                : `https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev`;
+    ? `https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev?id=${employeeID}`
+    : `https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycby_I1nDAjG9cknBUmYqgj8-_B5GArGDABrEsTRGjgs/dev`;
 
             try {
                 console.log("Fetching data from API:", apiURL); // Log the API URL
