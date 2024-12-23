@@ -2,35 +2,93 @@
 <html>
 <head>
     <title>Employee Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .employee-card {
+            display: inline-block;
+            text-align: left;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        .employee-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        .employee-card h2 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .employee-card p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Employee Details</h1>
     <div id="employee-info">
         <p>Loading...</p>
     </div>
+
     <script>
-        // Employee data
-        const employees = {
-            "1": { "name": "John Doe", "department": "IT", "email": "john.doe@example.com" },
-            "2": { "name": "Jane Smith", "department": "HR", "email": "jane.smith@example.com" }
-        };
+        // Link to your Google Sheets JSON API
+        const sheetURL = "https://spreadsheets.google.com/feeds/list/2PACX-1vSdtAMfgh_nNiwfp4sr3NqPoTKpxOTUIy426c3bRCezR3rZVB1RPZH7NKwn1F7wJBJuyf6r_0RV8ttk/od6/public/values?alt=json";
 
-        // Get employee ID from URL
-        const params = new URLSearchParams(window.location.search);
-        const employeeId = params.get("id");
+        async function fetchEmployeeData() {
+            try {
+                const response = await fetch(sheetURL);
+                const data = await response.json();
 
-        // Display employee details
-        const infoDiv = document.getElementById("employee-info");
-        if (employeeId && employees[employeeId]) {
-            const employee = employees[employeeId];
-            infoDiv.innerHTML = `
-                <p><strong>Name:</strong> ${employee.name}</p>
-                <p><strong>Department:</strong> ${employee.department}</p>
-                <p><strong>Email:</strong> ${employee.email}</p>
-            `;
-        } else {
-            infoDiv.innerHTML = `<p>Employee not found.</p>`;
+                // Extract rows from the JSON feed
+                const rows = data.feed.entry;
+                const container = document.getElementById("employee-info");
+                container.innerHTML = ""; // Clear the loading message
+
+                rows.forEach(row => {
+                    const employee = {
+                        id: row.gsx$employeeid.$t,
+                        name: row.gsx$name.$t,
+                        designation: row.gsx$designation.$t,
+                        department: row.gsx$department.$t,
+                        email: row.gsx$emailaddress.$t,
+                        phone: row.gsx$phonenumber.$t,
+                        doj: row.gsx$dateofjoining.$t,
+                        location: row.gsx$officelocation.$t,
+                        manager: row.gsx$managersname.$t,
+                        photo: row.gsx$profilepictureurl.$t
+                    };
+
+                    // Create employee card
+                    const card = document.createElement("div");
+                    card.className = "employee-card";
+                    card.innerHTML = `
+                        <img src="${employee.photo}" alt="${employee.name}'s Photo">
+                        <h2>${employee.name}</h2>
+                        <p><strong>Designation:</strong> ${employee.designation}</p>
+                        <p><strong>Department:</strong> ${employee.department}</p>
+                        <p><strong>Email:</strong> ${employee.email}</p>
+                        <p><strong>Phone:</strong> ${employee.phone}</p>
+                        <p><strong>Date of Joining:</strong> ${employee.doj}</p>
+                        <p><strong>Office Location:</strong> ${employee.location}</p>
+                        <p><strong>Manager:</strong> ${employee.manager}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.getElementById("employee-info").innerText = "Failed to load data.";
+            }
         }
+
+        // Call the function to load data
+        fetchEmployeeData();
     </script>
 </body>
 </html>
