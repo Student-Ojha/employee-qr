@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Details</title>
+</head>
+<body>
+    <h1>Employee Details</h1>
+    <div id="employee-info">
+        <p>Loading...</p>
+    </div>
+    <script>
+        // Employee data
+        const employees = {
+            "1": { "name": "John Doe", "department": "IT", "email": "john.doe@example.com" },
+            "2": { "name": "Jane Smith", "department": "HR", "email": "jane.smith@example.com" }
+        };
+
+        // Get employee ID from URL
+        const params = new URLSearchParams(window.location.search);
+        const employeeId = params.get("id");
+
+        // Display employee details
+        const infoDiv = document.getElementById("employee-info");
+        if (employeeId && employees[employeeId]) {
+            const employee = employees[employeeId];
+            infoDiv.innerHTML = `
+                <p><strong>Name:</strong> ${employee.name}</p>
+                <p><strong>Department:</strong> ${employee.department}</p>
+                <p><strong>Email:</strong> ${employee.email}</p>
+            `;
+        } else {
+            infoDiv.innerHTML = `<p>Employee not found.</p>`;
+        }
+    </script>
+</body>
+</html>
